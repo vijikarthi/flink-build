@@ -1,0 +1,4 @@
+[submodule "flink"]
+	path = flink
+	url = https://github.com/vijikarthi/flink.git
+	branch = FLINK-5974
