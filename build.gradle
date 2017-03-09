@@ -1,0 +1,57 @@
+buildscript {
+  repositories {
+    maven {
+      url "${artifactoryContextUrl}"
+      credentials {
+        username = "${artifactoryUser}"
+        password = "${artifactoryPassword}"
+      }
+      name = "artifactory"
+    }
+    mavenCentral()
+    jcenter()
+  }
+  dependencies {
+    classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
+  }
+}
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: "com.jfrog.artifactory"
+
+repositories {
+  add buildscript.repositories.getByName("artifactory")
+}
+
+artifactory {
+    contextUrl = "${artifactoryContextUrl}"
+    publish {
+        repository {
+            repoKey = "${artifactoryRootContext}"
+            username = "${artifactoryUser}"
+            password = "${artifactoryPassword}"
+            maven = true
+
+        }       
+        defaults {
+            publications ('mavenJava')
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId 'com.emc.nautilus'
+            artifactId 'flink'
+            version '1.2.0-patch'
+            artifact "flink/flink-dist/target/flink-1.2-SNAPSHOT-bin/flink-1.2.0.tgz"
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '3.1'
+}
+
