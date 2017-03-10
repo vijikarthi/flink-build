@@ -45,7 +45,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId 'com.emc.nautilus'
             artifactId 'flink'
-            version '1.2.0-patch'
+            version "${flinkVersion}"
             artifact "flink/flink-dist/target/flink-1.2-SNAPSHOT-bin/flink-1.2.0.tgz"
         }
     }

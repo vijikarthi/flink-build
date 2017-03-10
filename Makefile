@@ -2,7 +2,12 @@
 all: build compress publish
 
 publish:
-	./gradlew artifactoryPublish
+	$(eval BASE_VERSION=$(shell grep 'flinkBaseVersion=' gradle.properties  | sed 's/flinkBaseVersion=//' | sed 's/-.*//'))
+	$(eval GIT_COUNT=$(shell cd flink && git rev-list HEAD --count))
+	$(eval GIT_COMMIT=$(shell cd flink && git rev-parse --short HEAD))
+	$(eval VERSION=$(BASE_VERSION)-$(GIT_COUNT)-$(GIT_COMMIT))
+	@echo $(VERSION)
+	./gradlew artifactoryPublish -PflinkVersion=${VERSION}
 
 build:
 	cd flink; mvn clean package -DskipTests
